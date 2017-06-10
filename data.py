@@ -37,7 +37,7 @@ def get_dataset(type="original"):
     return dataset
 
 
-def split_train_validation_test(dataset, test_prop = 0.05):
+def split_train_validation_test(dataset):
     # Keep 5% of all the data for testing ==> 3200 images for testing
     train_data = []
     train_label = []
@@ -50,7 +50,7 @@ def split_train_validation_test(dataset, test_prop = 0.05):
             y = letter_indices[c]
 
             n = len(data)
-            n_train = int(n * (1 - test_prop)) + 1
+            n_train = int(n*0.925)
 
             train_data.extend(data[:n_train])
             train_label.extend([y for _ in range(n_train)])
@@ -70,24 +70,27 @@ def split_train_validation_test(dataset, test_prop = 0.05):
     train_label_onehot = np.zeros((len(train_label), 24))
     train_label_onehot[np.arange(len(train_label)), train_label] = 1
 
-    # keep last 1000 for validation
-    validation_data = train_data[0:1000]
-    validation_label_onehot = train_label_onehot[0:1000]
+    n_validation = 10000
 
-    train_data = train_data[1000:]
-    train_label_onehot = train_label_onehot[1000:]
+    # keep last 1000 for validation
+    validation_data = train_data[0:n_validation]
+    validation_label_onehot = train_label_onehot[0:n_validation]
+
+    train_data = train_data[n_validation:]
+    train_label = train_label[n_validation:]
+    train_label_onehot = train_label_onehot[n_validation:]
 
     # one_hot_encoding
     test_label_onehot = np.zeros((len(test_label), 24))
     test_label_onehot[np.arange(len(test_label)), test_label] = 1
 
     print("Train data size: ", len(train_data))
-    print("Train label size: ", len(train_label))
+    print("Train label size: ", len(train_label_onehot))
     print("Validation data size: ", len(validation_data))
     print("Validation label size: ", len(validation_label_onehot))
 
     print("Test data size: ", len(test_data))
-    print("Test label size: ", len(test_label))
+    print("Test label size: ", len(test_label_onehot))
 
     return train_data, train_label_onehot, validation_data, validation_label_onehot, test_data, test_label_onehot
 
