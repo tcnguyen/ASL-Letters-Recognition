@@ -3,3 +3,7 @@
 /.ipynb_checkpoints/
 /Test.ipynb
 /tmp/
+
+__pycache__/
+
+\.idea/
